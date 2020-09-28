@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.DATABASE_URL || 'mongodb://localhost/odos');
+mongoose.connect(process.env.DATABASE_URL || 'mongodb://localhost/odos', { useNewUrlParser: true, useUnifiedTopology: true });
 
 var app = express();
 
