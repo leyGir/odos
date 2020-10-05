@@ -14,6 +14,7 @@ Application for sharing geotagged travel photos with favorites list function.
   - Picture
   - Creation date
   - Last modification date
+  - Linked with a user
 - **Favorites list**
   - List name
   - Creation date
@@ -21,7 +22,7 @@ Application for sharing geotagged travel photos with favorites list function.
   - Linked with place
   - Public or private
 
-## Authorizations
+## Authorization
 
 - You cannot delete or edit someone else's photos
 - You cannot delete or modify a list of someone else
@@ -56,3 +57,5 @@ Application for sharing geotagged travel photos with favorites list function.
 ## Real-time API
 
 - Feed: when a new pitcture is added, the feed is updated
+- Photo counter: counter that updates as soon as a photo is added
+
