@@ -17,10 +17,16 @@ Application for sharing geotagged travel photos with favorites list function.
   - Linked with a user
 - **Favorites list**
   - List name
+  
   - Creation date
+  
   - Modification date
+  
   - Linked with place
+  
   - Public or private
+  
+    ![](C:\Users\soray\Desktop\HEIG-VD\ArchiOWeb\odos\public\images\odos.png)
 
 ## Authorization
 
