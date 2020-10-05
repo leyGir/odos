@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var picturesRouter = require('./routes/pictures');
 
 const mongoose = require('mongoose');
-// mongoose.Promise = Promise;
+mongoose.Promise = Promise;
 mongoose.connect(config.databaseUrl, { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
