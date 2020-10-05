@@ -36,7 +36,7 @@ Application for sharing geotagged travel photos with favorites list function.
 
 - see my user account: http://odos.herokuapp.com/users/id GET
 - add one user: http://odos.herokuapp.com/users POST
-- modify one user: http://odos.herokuapp.com/users/id PUT or PATCH
+- modify one user: http://odos.herokuapp.com/users/id PUT
 - delete one user: http://odos.herokuapp.com/users/id DELETE
 
 ### Pictures of places
@@ -45,13 +45,13 @@ Application for sharing geotagged travel photos with favorites list function.
 - see one picture: http://odos.herokuapp.com/pictures/id GET
 - see the feed: http://odos.herokuapp.com/pictures GET
 - delete one picture: http://odos.herokuapp.com/pictures/id DELETE
-- modify one picture: http://odos.herokuapp.com/pictures/id PUT or PATCH
+- modify one picture: http://odos.herokuapp.com/pictures/id PUT
 
 ### Favorites
 
 - see all my favorites lists: http://odos.herokuapp.com/users/id/lists GET
 - see one list: http://odos.herokuapp.com/users/id/lists/id GET
-- modify one list: http://odos.herokuapp.com/users/id/lists/id PUT or PATCH
+- modify one list: http://odos.herokuapp.com/users/id/lists/id PUT
 - delete one list: http://odos.herokuapp.com/users/id/lists/id DELETE
 
 ## Real-time API
