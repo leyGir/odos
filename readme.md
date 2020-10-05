@@ -26,7 +26,7 @@ Application for sharing geotagged travel photos with favorites list function.
   
   - Public or private
   
-    ![](C:\Users\soray\Desktop\HEIG-VD\ArchiOWeb\odos\public\images\odos.png)
+    ![](https://github.com/Soraya97/odos/blob/master/images/odos.png)
 
 ## Authorization
 
