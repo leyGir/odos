@@ -26,7 +26,8 @@ Application for sharing geotagged travel photos with favorites list function.
 
 - You cannot delete or edit someone else's photos
 - You cannot delete or modify a list of someone else
--  You cannot add photos to someone else's private list (unless it is shared)
+-  You cannot add photos to someone else's list
+-  You cannot see someone else's private list
 -  You cannot modify someone else's data
 -  You cannot modify the creation dates of photos or lists
 
