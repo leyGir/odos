@@ -1,3 +1,10 @@
+// Load environment variables from the .env file.
+try {
+    require('dotenv').config();
+  } catch (err) {
+    console.log('No .env file loaded');
+  }
+
 exports.databaseUrl = process.env.DATABASE_URL || 'mongodb://localhost/odos';
 exports.port = process.env.PORT || '3000';
 
