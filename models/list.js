@@ -1,31 +1,46 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// Define the schema for lists
+const ObjectId = mongoose.Types.ObjectId;
+
+// Schema for lists
 const listSchema = new Schema({
-  name: String,
-  // name: {
-  //   type: String,
-  //   minlength: 3,
-  //   required: [true, 'Name is required']
-  // },
-  // creationDate: {
-  //   type: Date,
-  //   default: Date.now
-  // },
-  // modificationDate: {
-  //   type: Date,
-  //   default: Date.now
+  name: {
+    type: String,
+    minlength: 3,
+    required: [true, 'List name is required'],
+    unique: true,
+    validate: {
+      // Manually validate uniqueness to send a "pretty" validation error rather than a MongoDB duplicate key error
+      validator: listNameUnique,
+      message: 'List name {VALUE} already exists'
+    }
+  },
+  creationDate: {
+    type: Date,
+    default: Date.now
+  },
+  modificationDate: {
+    type: Date,
+    default: Date.now
+  },
+  // user: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'User',
+  //   required: [true, 'A list must belong to an user']
   // },
   // pictures: {
   //   type: Schema.Types.ObjectId,
   //   ref: 'Picture'
   // },
-  // user: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: [true, 'A list must belong to a user']
-  // },
-  // public: Boolean
+  public: { type: Boolean, default: false }
 });
-// Create the model from the schema and export it
+// Model from the schema and export it
 module.exports = mongoose.model('List', listSchema);
+
+// Verify if the list's name is unique and manually send a message error other thant the MongoBD one
+function listNameUnique(value) {
+  const ListModel = mongoose.model('List', listSchema);
+  return ListModel.findOne().where('name').equals(value).exec().then( (existingList) => {
+    return !existingList || existingList._id.equals(this._id)
+  });
+}

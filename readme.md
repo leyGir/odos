@@ -14,7 +14,7 @@ Application for sharing geotagged travel photos with favorites list function.
   - Picture
   - Creation date
   - Last modification date
-  - Necessarily linked with a user 
+  - Necessarily linked with a user
 - **Favorites list**
   - List name
   - Creation date
@@ -22,8 +22,8 @@ Application for sharing geotagged travel photos with favorites list function.
   - Linked with pictures of places
   - Necessarily linked with a user
   - Public or private
-  
-    ![](https://github.com/Soraya97/odos/blob/master/images/odos.png)
+
+![](https://github.com/Soraya97/odos/blob/master/images/odos.png)
 
 ## Authorization
 
@@ -62,4 +62,3 @@ Application for sharing geotagged travel photos with favorites list function.
 
 - Feed: when a new pitcture is added, the feed is updated
 - Photo counter: counter that updates as soon as a photo is added
-
