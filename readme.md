@@ -14,16 +14,13 @@ Application for sharing geotagged travel photos with favorites list function.
   - Picture
   - Creation date
   - Last modification date
-  - Linked with a user
+  - Necessarily linked with a user 
 - **Favorites list**
   - List name
-  
   - Creation date
-  
-  - Modification date
-  
-  - Linked with place
-  
+  - Last modification date
+  - Linked with pictures of places
+  - Necessarily linked with a user
   - Public or private
   
     ![](https://github.com/Soraya97/odos/blob/master/images/odos.png)
@@ -31,11 +28,11 @@ Application for sharing geotagged travel photos with favorites list function.
 ## Authorization
 
 - You cannot delete or edit someone else's photos
-- You cannot delete or modify a list of someone else
--  You cannot add photos to someone else's list
--  You cannot see someone else's private list
--  You cannot modify someone else's data
--  You cannot modify the creation dates of photos or lists
+- You cannot delete or edit a list of someone else
+- You cannot add photos to someone else's list
+- You cannot see someone else's private list
+- You cannot modify someone else's data
+- You cannot modify the creation dates of photos or lists
 
 ## URLs
 
