@@ -4,12 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var config = require('./config');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var listsRouter = require('./routes/lists');
+var picturesRouter = require('./routes/pictures');
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.DATABASE_URL || 'mongodb://localhost/odos', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.Promise = Promise;
+mongoose.connect(config.databaseUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 var app = express();
 
@@ -26,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/lists', listsRouter);
+app.use('/users', picturesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
