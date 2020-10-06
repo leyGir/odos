@@ -10,7 +10,6 @@ const listSchema = new Schema({
     required: [true, 'List name is required'],
     unique: true,
     validate: {
-      // Manually validate uniqueness to send a "pretty" validation error rather than a MongoDB duplicate key error
       validator: listNameUnique,
       message: 'List name {VALUE} already exists'
     }
@@ -34,10 +33,11 @@ const listSchema = new Schema({
   // },
   public: { type: Boolean, default: false }
 });
-// Model from the schema and export it
+
+// Model for lists
 module.exports = mongoose.model('List', listSchema);
 
-// Verify if the list's name is unique and manually send a message error other thant the MongoBD one
+// Check that the list name is unique and send an "better" error message other than MongoDB
 function listNameUnique(value) {
   const ListModel = mongoose.model('List', listSchema);
   return ListModel.findOne().where('name').equals(value).exec().then( (existingList) => {
