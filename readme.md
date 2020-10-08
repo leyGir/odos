@@ -53,6 +53,7 @@ Application for sharing geotagged travel photos with favorites list function.
 
 ### Favorites
 
+- add one list: http://odos.herokuapp.com/users/id/lists POST
 - see all my favorites lists: http://odos.herokuapp.com/users/id/lists GET
 - see one list: http://odos.herokuapp.com/users/id/lists/id GET
 - modify one list: http://odos.herokuapp.com/users/id/lists/id PUT
