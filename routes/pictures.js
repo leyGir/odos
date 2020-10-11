@@ -4,7 +4,7 @@ const Picture = require('../models/picture');
 
 /* GET pictures listing. */
 router.get('/', function(req, res, next) {
-  Picture.find().sort('description'||'geolocation'||'picture'||'creation_date'||'last_mod_date').exec(function(err, pictures) {
+  Picture.find().sort('picture').exec(function(err, pictures) {
     if (err) {
       return next(err);
     }
@@ -12,8 +12,9 @@ router.get('/', function(req, res, next) {
   });
 });
 
+
 /* POST new picture */
-router.post('/', function(req, res, next) {
+router.post('/', loadPictureFromParamsMiddleware, function(req, res, next) {
     // Create a new picture from the JSON in the request body
     const newPicture = new Picture(req.body);
     // Save that document
@@ -22,24 +23,59 @@ router.post('/', function(req, res, next) {
         return next(err);
       }
       // Send the saved document in the response
-      res.send(savedPicture);
+      res.status(201).send(savedPicture);
     });
   });
 
 
-  /* PUT new picture */
-router.put('/', function(req, res, next) {
-    // Modify a picture from the JSON in the request body
-    this.model.set({editable: true});
-    // Cancel modification
-    this.picture.set({editable: false});
-  });
+//   /* PUT new picture */
+router.put('/:id', utils.requireJson, loadPictureFromParamsMiddleware, function (req, res, next) {
 
-    /* DELETE new picture */
-router.delete('/', function(req, res, next) {
-    // Delete a picture from the JSON in the request body
-    this.picture.destroy();
+  // Update all properties (regardless of whether the are present in the request body or not)
+  req.picture.description = req.body.description;
+  req.picture.picture = req.body.picture;
+
+  req.picture.save(function (err, savedPicture) {
+    if (err) {
+      return next(err);
+    }
+
+    debug(`Updated picture "${savedPicture.title}"`);
+    res.send(savedPicture);
   });
+});
+
+function loadPictureFromParamsMiddleware(req, res, next) {
+
+  const pictureId = req.params.id;
+  // if (!ObjectId.isValid(pictureId)) {
+  //   return pictureNotFound(res, pictureId);
+  // }
+
+  Picture.findById(req.params.id, function(err, list) {
+    if (err) {
+      return next(err);
+    }
+    // } else if (!picture) {
+    //   return pictureNotFound(res, listId);
+    // }
+
+    req.picture = picture;
+    next();
+  });
+}
+
+//     /* DELETE new picture */
+router.delete('/:id', loadPictureFromParamsMiddleware, function (req, res, next) {
+  req.picture.remove(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    debug(`Deleted picture "${req.picture.description}"`);
+    res.sendStatus(204);
+  });
+});
 
 module.exports = router;
 
