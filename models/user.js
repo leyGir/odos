@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const uniqueValidator = require('mongoose-unique-validator');
+// const uniqueValidator = require('mongoose-unique-validator');
 
 // Define the schema for users
 const userSchema = new Schema({
@@ -9,20 +9,20 @@ const userSchema = new Schema({
       match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
       required: [true, "can't be blank"],
       unique: true,
-      validate: {
-        validator: UsernameUnique,
-        message: 'List name {VALUE} already exists'
-    }
+    //   validate: {
+    //     validator: UsernameUnique,
+    //     message: 'List name {VALUE} already exists'
+    // }
   },
   email:{
       type : String,
       match: [/\S+@\S+\.\S+/, 'is invalid'],
       required: [true, "can't be blank"],
       unique: true,
-      validate: {
-        validator: EmailUnique,
-        message: 'List name {VALUE} already exists'
-    }
+    //   validate: {
+    //     validator: EmailUnique,
+    //     message: 'List name {VALUE} already exists'
+    // }
   },
   //A faire! Hash password
   password:{
@@ -38,4 +38,4 @@ const userSchema = new Schema({
 // Create the model from the schema and export it
 module.exports = mongoose.model('User', userSchema);
 
-UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+// UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});

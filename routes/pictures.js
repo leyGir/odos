@@ -29,21 +29,21 @@ router.post('/', loadPictureFromParamsMiddleware, function(req, res, next) {
 
 
 //   /* PUT new picture */
-router.put('/:id', utils.requireJson, loadPictureFromParamsMiddleware, function (req, res, next) {
-
-  // Update all properties (regardless of whether the are present in the request body or not)
-  req.picture.description = req.body.description;
-  req.picture.picture = req.body.picture;
-
-  req.picture.save(function (err, savedPicture) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Updated picture "${savedPicture.title}"`);
-    res.send(savedPicture);
-  });
-});
+// router.put('/:id', utils.requireJson, loadPictureFromParamsMiddleware, function (req, res, next) {
+//
+//   // Update all properties (regardless of whether the are present in the request body or not)
+//   req.picture.description = req.body.description;
+//   req.picture.picture = req.body.picture;
+//
+//   req.picture.save(function (err, savedPicture) {
+//     if (err) {
+//       return next(err);
+//     }
+//
+//     debug(`Updated picture "${savedPicture.title}"`);
+//     res.send(savedPicture);
+//   });
+// });
 
 function loadPictureFromParamsMiddleware(req, res, next) {
 
@@ -78,5 +78,3 @@ router.delete('/:id', loadPictureFromParamsMiddleware, function (req, res, next)
 });
 
 module.exports = router;
-
-

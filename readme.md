@@ -38,26 +38,26 @@ Application for sharing geotagged travel photos with favorites list function.
 
 ### User
 
-- see my user account: http://odos.herokuapp.com/users/id GET
+- see my user account: http://odos.herokuapp.com/users/:userId GET
 - add one user: http://odos.herokuapp.com/users POST
-- modify one user: http://odos.herokuapp.com/users/id PUT
-- delete one user: http://odos.herokuapp.com/users/id DELETE
+- modify one user: http://odos.herokuapp.com/users/:userId PUT
+- delete one user: http://odos.herokuapp.com/users/:userId DELETE
 
 ### Pictures of places
 
 - add one picture: http://odos.herokuapp.com/pictures POST
-- see one picture: http://odos.herokuapp.com/pictures/id GET
+- see one picture: http://odos.herokuapp.com/pictures/:pictureId GET
 - see the feed: http://odos.herokuapp.com/pictures GET
-- delete one picture: http://odos.herokuapp.com/pictures/id DELETE
-- modify one picture: http://odos.herokuapp.com/pictures/id PUT
+- delete one picture: http://odos.herokuapp.com/pictures/:pictureId DELETE
+- modify one picture: http://odos.herokuapp.com/pictures/:pictureId PUT
 
 ### Favorites
 
-- add one list: http://odos.herokuapp.com/users/id/lists POST
-- see all my favorites lists: http://odos.herokuapp.com/users/id/lists GET
-- see one list: http://odos.herokuapp.com/users/id/lists/id GET
-- modify one list: http://odos.herokuapp.com/users/id/lists/id PUT
-- delete one list: http://odos.herokuapp.com/users/id/lists/id DELETE
+- add one list: http://odos.herokuapp.com/users/userId/lists POST
+- see all my favorites lists: http://odos.herokuapp.com/users/:userId/lists GET
+- see one list: http://odos.herokuapp.com/users/:userId/lists/:listId GET
+- modify one list: http://odos.herokuapp.com/users/:userId/lists/:listId PUT
+- delete one list: http://odos.herokuapp.com/users/:userId/lists/:listId DELETE
 
 ## Real-time API
 
