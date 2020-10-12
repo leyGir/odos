@@ -1,10 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const User = require('../models/user');
 
 
 /* GET users listing. */
+// router.get('/', function(req, res, next) {
+//   User.find().sort('username').exec(function(err, users) {
+//     if (err) {
+//       return next(err);
+//     }
+//     res.send(users);
+//   });
+// });
+
+
+// GET user of all users
 router.get('/', function(req, res, next) {
+  // res.send('users')
+
   User.find().sort('username').exec(function(err, users) {
     if (err) {
       return next(err);
@@ -13,7 +26,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
-module.exports = router;
+router.get('/id', getUser, function(req, res, next) {
+  User.find(req.user).exec(function(err, user) {
+    if (err) {
+      return next(err);
+    }
+    res.send(user);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* POST new user */
@@ -42,7 +74,6 @@ router.put('/', function(req, res, next) {
     res.send(users);
   });
 });
-module.exports = router;
 
 
 /* DELETE user */
