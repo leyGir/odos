@@ -1,10 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const Picture = require('../models/picture');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+const debug = require('debug')('demo:people');
 
 /* GET pictures listing. */
-router.get('/', function(req, res, next) {
-  Picture.find().sort('picture').exec(function(err, pictures) {
+router.get('/', function (req, res, next) {
+  Picture.find().sort('picture').exec(function (err, pictures) {
     if (err) {
       return next(err);
     }
@@ -12,61 +15,61 @@ router.get('/', function(req, res, next) {
   });
 });
 
-
-/* POST new picture */
-router.post('/', loadPictureFromParamsMiddleware, function(req, res, next) {
-    // Create a new picture from the JSON in the request body
-    const newPicture = new Picture(req.body);
-    // Save that document
-    newPicture.save(function(err, savedPicture) {
-      if (err) {
-        return next(err);
-      }
-      // Send the saved document in the response
-      res.status(201).send(savedPicture);
-    });
-  });
-
-
-//   /* PUT new picture */
-// router.put('/:id', utils.requireJson, loadPictureFromParamsMiddleware, function (req, res, next) {
-//
-//   // Update all properties (regardless of whether the are present in the request body or not)
-//   req.picture.description = req.body.description;
-//   req.picture.picture = req.body.picture;
-//
-//   req.picture.save(function (err, savedPicture) {
-//     if (err) {
-//       return next(err);
-//     }
-//
-//     debug(`Updated picture "${savedPicture.title}"`);
-//     res.send(savedPicture);
-//   });
-// });
-
-function loadPictureFromParamsMiddleware(req, res, next) {
-
-  const pictureId = req.params.id;
-  // if (!ObjectId.isValid(pictureId)) {
-  //   return pictureNotFound(res, pictureId);
-  // }
-
-  Picture.findById(req.params.id, function(err, list) {
+router.get('/:pictureId', getPicture, function (req, res, next) {
+  Picture.find(req.picture).exec(function (err, picture) {
     if (err) {
       return next(err);
     }
-    // } else if (!picture) {
-    //   return pictureNotFound(res, listId);
-    // }
-
-    req.picture = picture;
-    next();
+    res.send(picture);
   });
-}
+});
 
-//     /* DELETE new picture */
-router.delete('/:id', loadPictureFromParamsMiddleware, function (req, res, next) {
+
+/* POST new picture */
+router.post('/', getPicture, function (req, res, next) {
+  // Retrieve the user ID from the URL.
+  const user = req.params.userId;
+  // Create a new picture from the JSON in the request body
+  const newPicture = new Picture(req.body);
+  // Save that document
+  newPicture.save(function (err, savedPicture) {
+    if (err) {
+      return next(err);
+    }
+    // Send the saved document in the response
+    res.status(201).send(savedPicture);
+  });
+});
+
+
+//   /* PATCH one picture */
+router.patch('/:pictureId', getPicture, function (req, res, next) {
+  // res.send(req.picture.name);
+  // Update all properties (regardless of whether they are in the request body or not)
+  if (req.body.name !== undefined) {
+    req.picture.description = req.body.name;
+  }
+
+  if (req.body.public !== undefined) {
+    req.picture.public = req.body.public;
+  }
+
+  req.picture.last_mod_date = new Date();
+
+  req.picture.save(function (err, savedPicture) {
+    if (err) {
+      return next(err);
+    }
+
+    debug(`Updated picture "${savedPicture.name}"`);
+    res.send(savedPicture);
+  });
+});
+
+
+
+///* DELETE one picture */
+router.delete('/:pictureId', getPicture, function (req, res, next) {
   req.picture.remove(function (err) {
     if (err) {
       return next(err);
@@ -76,5 +79,26 @@ router.delete('/:id', loadPictureFromParamsMiddleware, function (req, res, next)
     res.sendStatus(204);
   });
 });
+
+// Get the picture by id
+function getPicture(req, res, next) {
+  // get the id of the picture by the param
+  const pictureId = req.params.pictureId;
+  // if (!ObjectId.isValid(pictureId)) {
+  //   return pictureNotFound(res, pictureId);
+  // }
+  // get the picture by id
+  List.findById(req.params.pictureId, function (err, list) {
+    if (err) {
+      return next(err);
+    }
+    // } else if (!picture) {
+    //   return pictureNotFound(res, pictureId);
+    // }
+
+    req.picture = picture;
+    next();
+  });
+}
 
 module.exports = router;
