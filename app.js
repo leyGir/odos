@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/lists', listsRouter);
+app.use('/users/:userId/lists', listsRouter);
 app.use('/users', picturesRouter);
 
 // catch 404 and forward to error handler

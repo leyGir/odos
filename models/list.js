@@ -22,15 +22,15 @@ const listSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  // user: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: [true, 'A list must belong to an user']
-  // },
-  // pictures: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Picture'
-  // },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    // required: [true, 'A list must belong to an user']
+  },
+  pictures: {
+    type: Schema.Types.ObjectId,
+    ref: 'Picture'
+  },
   public: { type: Boolean, default: false }
 });
 

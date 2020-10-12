@@ -9,11 +9,9 @@ const debug = require('debug')('demo:people');
 router.get('/', function(req, res, next) {
   // res.send('lists')
   List.find().sort('list').exec(function(err, lists) {
-
     if (err) {
       return next(err);
     }
-
     res.send(lists);
   });
 });
@@ -21,23 +19,33 @@ router.get('/', function(req, res, next) {
 
 // POST new list
 router.post('/', loadListFromParamsMiddleware, function(req, res, next) {
+  // Retrieve the user ID from the URL.
+  const user = req.params.userId;
+  // Create list and send response...
   const newList = new List(req.body);
   newList.save(function(err, savedList) {
     if (err) {
       return next(err);
     }
+    debug(`new list "${savedList.name}"`);
     res.status(201).send(savedList);
   });
 });
 
 
 // PUT the name of a list
-router.put('/:id', loadListFromParamsMiddleware, function(req, res, next) {
+router.patch('/:id', loadListFromParamsMiddleware, function(req, res, next) {
   // res.send(req.list.name);
   // Update all properties (regardless of whether they are in the request body or not)
-  req.list.name = req.body.name;
-  // req.list.gender = req.body.gender;
-  // req.list.birthDate = req.body.birthDate;
+  if (req.body.name !== undefined) {
+    req.list.name = req.body.name;
+  }
+
+  if (req.body.public !== undefined) {
+    req.list.public = req.body.public;
+  }
+
+  req.list.modificationDate = new Date();
 
   req.list.save(function(err, savedList) {
     if (err) {
@@ -49,6 +57,18 @@ router.put('/:id', loadListFromParamsMiddleware, function(req, res, next) {
   });
 });
 
+
+//DELETE one list
+router.delete('/:id', loadListFromParamsMiddleware, function (req, res, next) {
+  req.list.remove(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    debug(`Deleted list "${req.list.name}"`);
+    res.sendStatus(204);
+  });
+});
 
 //
 function loadListFromParamsMiddleware(req, res, next) {
