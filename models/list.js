@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
+const uniqueValidator = require('mongoose-unique-validator');
 
 // Schema for lists
 const listSchema = new Schema({
@@ -8,11 +9,11 @@ const listSchema = new Schema({
     type: String,
     minlength: 3,
     required: [true, 'List name is required'],
-    unique: true,
-    validate: {
-      validator: listNameUnique,
-      message: 'List name {VALUE} already exists'
-    }
+    unique: true
+    // validate: {
+    //   validator: nameUnique,
+    //   message: 'List name {VALUE} already exists'
+    // }
   },
   creationDate: {
     type: Date,
@@ -25,7 +26,8 @@ const listSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    // required: [true, 'A list must belong to an user']
+    // required: [true, 'A list must belong to an user'],
+    // default: '5f840ec9baa3a856541d879c'
   },
   pictures: {
     type: Schema.Types.ObjectId,
@@ -38,9 +40,12 @@ const listSchema = new Schema({
 module.exports = mongoose.model('List', listSchema);
 
 // Check that the list name is unique and send an "better" error message other than MongoDB
-function listNameUnique(value) {
-  const ListModel = mongoose.model('List', listSchema);
-  return ListModel.findOne().where('name').equals(value).exec().then( (existingList) => {
-    return !existingList || existingList._id.equals(this._id)
-  });
-}
+// function listNameUnique(value) {
+//   const ListModel = mongoose.model('List', listSchema);
+//   return ListModel.findOne().where('name').equals(value).exec().then( (existingList) => {
+//     return !existingList || existingList._id.equals(this._id)
+//   });
+// }
+//
+
+listSchema.plugin(uniqueValidator, { message: 'List name {VALUE} already exists' });
