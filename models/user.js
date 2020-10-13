@@ -31,4 +31,4 @@ const userSchema = new Schema({
 // Create the model from the schema and export it
 module.exports = mongoose.model('User', userSchema);
 
-UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+userSchema.plugin(uniqueValidator, {message: 'is already taken.'});

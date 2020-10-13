@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 const uniqueValidator = require('mongoose-unique-validator');
@@ -29,7 +29,7 @@ const listSchema = new Schema({
     // required: [true, 'A list must belong to an user'],
     // default: '5f840ec9baa3a856541d879c'
   },
-  pictures: {
+  picture: {
     type: Schema.Types.ObjectId,
     ref: 'Picture'
   },
