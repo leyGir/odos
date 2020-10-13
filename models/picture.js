@@ -16,7 +16,7 @@ const pictureSchema = new Schema({
     }
   },
   geoloaction: String, // comment faire avec la géolocalisation ?
-  picture: String, // comment faire pour dire que cela est une image?
+  picture: String, // peut-être une chaîne de caractères --> donc c'est bon
   creation_date: {
     type: Date,
     default: Date.now
