@@ -10,7 +10,7 @@ const userSchema = new Schema({
       required: [true, "can't be blank"],
       unique: true,
     //   validate: {
-    //     validator: UsernameUnique,
+    //     validator: usernameUnique,
     //     message: 'List name {VALUE} already exists'
     // }
   },
@@ -20,7 +20,7 @@ const userSchema = new Schema({
       required: [true, "can't be blank"],
       unique: true,
     //   validate: {
-    //     validator: EmailUnique,
+    //     validator: emailUnique,
     //     message: 'List name {VALUE} already exists'
     // }
   },
