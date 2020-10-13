@@ -33,7 +33,6 @@ router.get('/:listId', getList, function(req, res, next) {
       res.send(list);
       // res.send(list.user.username);
     });
-
 });
 // 5f842655f631a95dd8fb1509 -> Asiro (5f842621ec09072b0413ecdc)
 // 5f84264355e727549c65af73 -> Asyx (5f84262e5ce88133a40ca44b)
