@@ -1,5 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({
+  mergeParams: true
+});
 const List = require('../models/list');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -8,35 +10,48 @@ const debug = require('debug')('demo:people');
 // GET list of all lists
 router.get('/', function(req, res, next) {
   // res.send('lists')
-
-  List.find().sort('name').exec(function(err, lists) {
-    if (err) {
-      return next(err);
-    }
-    res.send(lists);
-  });
+  List
+    .find()
+    .sort('name')
+    .exec(function(err, lists) {
+      if (err) {
+        return next(err);
+      }
+      res.send(lists);
+    });
 });
 
 router.get('/:listId', getList, function(req, res, next) {
-  List.find(req.list).exec(function(err, list) {
-    if (err) {
-      return next(err);
-    }
-    res.send(list);
-  });
-});
+  // res.send(req.list);
+  List
+    .find(req.list)
+    .populate('user')
+    .exec(function(err, list) {
+      if (err) {
+        return next(err);
+      }
+      res.send(list);
+      // res.send(list.user.username);
+    });
 
+});
+// 5f842655f631a95dd8fb1509 -> Asiro (5f842621ec09072b0413ecdc)
+// 5f84264355e727549c65af73 -> Asyx (5f84262e5ce88133a40ca44b)
 
 // POST new list
 router.post('/', getList, function(req, res, next) {
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
+  // res.send(req.params.userId);
   // Create list and send response...
   const newList = new List(req.body);
+  newList.set('user', user);
+
   newList.save(function(err, savedList) {
     if (err) {
       return next(err);
     }
+
     debug(`New list "${savedList.name}"`);
     res.status(201).send(savedList);
   });
@@ -69,8 +84,8 @@ router.patch('/:listId', getList, function(req, res, next) {
 
 
 //DELETE one list
-router.delete('/:listId', getList, function (req, res, next) {
-  req.list.remove(function (err) {
+router.delete('/:listId', getList, function(req, res, next) {
+  req.list.remove(function(err) {
     if (err) {
       return next(err);
     }
