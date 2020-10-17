@@ -5,16 +5,28 @@ const User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  User.find().sort('username').exec(function(err, users) {
-    if (err) {
-      return next(err);
-    }
+  User
+    .find()
+    .sort('username')
+    .exec(function(err, users) {
+      if (err) {
+        return next(err);
+      }
     res.send(users);
   });
 });
 
-module.exports = router;
-
+/* GET user id */
+router.get('/:id', getUser, function(req, res, next) {
+  User
+    .find(req.user)
+    .exec(function(err, user) {
+      if (err) {
+        return next(err);
+      }
+      res.send(user);
+    });
+});
 
 /* POST new user */
 router.post('/', function(req, res, next) {
@@ -30,28 +42,65 @@ router.post('/', function(req, res, next) {
   });
 });
 
+// PATCH the username of a user
+router.patch('/:id', getUser, function(req, res, next) {
+  // Update all properties (regardless of whether they are in the request body or not)
+  if (req.body.username !== undefined) {
+    req.user.username = req.body.username;
+  }
 
-///////////////////
+  if (req.body.email !== undefined) {
+    req.user.email = req.body.email;
+  }
 
-/* PUT/modify username */
-router.put('/', function(req, res, next) {
-  User.find().sort('name').exec(function(err, users) {
+  if (req.body.password !== undefined) {
+    req.user.password = req.body.password;
+  }
+
+  req.user.save(function(err, savedUser) {
     if (err) {
       return next(err);
     }
-    res.send(users);
+
+    // debug(`Updated user "${savedUser.username}"`);
+    res.send(savedUser);
   });
 });
-module.exports = router;
 
 
 /* DELETE user */
-router.delete('/', function(req, res, next) {
-  User.find().sort('name').exec(function(err, users) {
+router.delete('/:id', getUser, function(req, res, next) {
+  req.user.remove(function(err) {
     if (err) {
       return next(err);
     }
-    res.send(users);
+
+    // debug(`Deleted user "${req.user.username}"`);
+    res.sendStatus(204);
   });
 });
+
+
+// Get the user by id
+function getUser(req, res, next) {
+  // get the id of the user by the param
+  const id = req.params.id;
+  // if (!ObjectId.isValid(id)) {
+  //   return userNotFound(res, id);
+  // }
+
+  // get the user by id
+  User.findById(req.params.id, function(err, user) {
+    if (err) {
+      return next(err);
+    }
+    // } else if (!user) {
+    //   return userNotFound(res, id);
+    // }
+    req.user = user;
+    next();
+  });
+}
+
+
 module.exports = router;
