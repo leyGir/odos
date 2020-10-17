@@ -34,13 +34,14 @@ router.get('/:listId', getList, function(req, res, next) {
       // res.send(list.user.username);
     });
 });
-// 5f842655f631a95dd8fb1509 -> Asiro (5f842621ec09072b0413ecdc)
-// 5f84264355e727549c65af73 -> Asyx (5f84262e5ce88133a40ca44b)
+// 5f85b4c7f80b3609a0f7b821 -> Asiro (5f85b4a7f80b3609a0f7b820)
+// 5f85b4e9f80b3609a0f7b822 -> Asyx (5f85b496f80b3609a0f7b81f)
 
 // POST new list
 router.post('/', getList, function(req, res, next) {
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
+  const picture = req.body.picture;
   // res.send(req.params.userId);
   // Create list and send response...
   const newList = new List(req.body);
@@ -67,6 +68,10 @@ router.patch('/:listId', getList, function(req, res, next) {
 
   if (req.body.public !== undefined) {
     req.list.public = req.body.public;
+  }
+
+  if (req.body.picture !== undefined) {
+    req.list.picture = req.body.picture;
   }
 
   req.list.modificationDate = new Date();
