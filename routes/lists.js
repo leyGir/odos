@@ -34,14 +34,12 @@ router.get('/:listId', getList, function(req, res, next) {
       // res.send(list.user.username);
     });
 });
-// 5f85b4c7f80b3609a0f7b821 -> Asiro (5f85b4a7f80b3609a0f7b820)
-// 5f85b4e9f80b3609a0f7b822 -> Asyx (5f85b496f80b3609a0f7b81f)
+
 
 // POST new list
 router.post('/', getList, function(req, res, next) {
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
-  const picture = req.body.picture;
   // res.send(req.params.userId);
   // Create list and send response...
   const newList = new List(req.body);
@@ -95,7 +93,7 @@ router.delete('/:listId', getList, function(req, res, next) {
     }
 
     debug(`Deleted list "${req.list.name}"`);
-    res.sendStatus(204);
+    res.send(`"${req.list.name}" deleted`).sendStatus(204);
   });
 });
 

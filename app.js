@@ -9,6 +9,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const listsRouter = require('./routes/lists');
 const picturesRouter = require('./routes/pictures');
+const authRouter = require('./routes/auth')
 
 const mongoose = require('mongoose');
 mongoose.Promise = Promise;
@@ -33,6 +34,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/users/:userId/lists', listsRouter);
 app.use('/users/:userId/pictures', picturesRouter);
+app.use('/login', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

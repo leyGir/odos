@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-
+const config = require('../config');
+const bcrypt = require('bcrypt');
+const debug = require('debug')('demo:people');
+const jwt = require('jsonwebtoken');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -30,15 +33,26 @@ router.get('/:id', getUser, function(req, res, next) {
 
 /* POST new user */
 router.post('/', function(req, res, next) {
-  // Create a new document from the JSON in the request body
-  const newUser = new User(req.body);
-  // Save that document
-  newUser.save(function(err, savedUser) {
+  // Get the password
+  const password= req.body.password;
+  const costFactor = config.bcryptCostFactor;
+  // Hash the password
+  bcrypt.hash(password, costFactor, function(err, passwordHash){
     if (err) {
       return next(err);
     }
-    // Send the saved document in the response
-    res.send(savedUser);
+    // Create a new document from the JSON in the request body
+    const newUser = new User(req.body);
+    newUser.set('password', passwordHash);
+    // Save that document
+    newUser.save(function(err, savedUser) {
+      if (err) {
+        return next(err);
+      }
+      debug(`New user "${savedUser.username}"`);
+      // Send the saved document in the response
+      res.send(savedUser);
+    });
   });
 });
 
@@ -76,7 +90,7 @@ router.delete('/:id', getUser, function(req, res, next) {
     }
 
     // debug(`Deleted user "${req.user.username}"`);
-    res.sendStatus(204);
+    res.send(`"${req.user.username}" deleted`).sendStatus(204);
   });
 });
 
@@ -101,6 +115,34 @@ function getUser(req, res, next) {
     next();
   });
 }
+
+// A REPRENDRE PLUS TARD, POUR LES AUTORISATIONS
+// Route protections, not accessible until someone is authenticated
+// It uses the token
+// function authenticate(req, res, next) {
+//   // Ensure the header is present.
+//   const authorization = req.get('Authorization');
+//   if (!authorization) {
+//     return res.status(401).send('Authorization header is missing');
+//   }
+//
+//   // Check that the header has the correct format.
+//   const match = authorization.match(/^Bearer (.+)$/);
+//   if (!match) {
+//     return res.status(401).send('Authorization header is not a bearer token');
+//   }
+//
+//   // Extract and verify the JWT.
+//   const token = match[1];
+//   jwt.verify(token, config.secretKey, function(err, payload) {
+//     if (err) {
+//       return res.status(401).send('Your token is invalid or has expired');
+//     } else {
+//       req.currentUserId = payload.sub;
+//       next(); // Pass the ID of the authenticated user to the next middleware.
+//     }
+//   });
+// }
 
 
 module.exports = router;

@@ -21,8 +21,6 @@ const userSchema = new Schema({
   password:{
       type : String,
       required: [true, "can't be blank"],
-
-
   },
   registrationDate:{
     type: Date,
@@ -30,7 +28,17 @@ const userSchema = new Schema({
   },
 });
 
+userSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+
+// Do not send the password in the response
+userSchema.set('toJSON', {
+   transform: transformJsonUser
+});
+function transformJsonUser(doc, json, options) {
+  // Remove the hashed password from the generated JSON.
+  delete json.password;
+  return json;
+}
+
 // Create the model from the schema and export it
 module.exports = mongoose.model('User', userSchema);
-
-userSchema.plugin(uniqueValidator, {message: 'is already taken.'});
