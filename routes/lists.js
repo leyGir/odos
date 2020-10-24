@@ -21,6 +21,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* GET one specific list */
 router.get('/:listId', getList, function(req, res, next) {
   res.send(req.list);
 });
