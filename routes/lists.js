@@ -5,7 +5,7 @@ const router = express.Router({
 const List = require('../models/list');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const debug = require('debug')('demo:people');
+const debug = require('debug')('demo:lists');
 
 // GET list of all lists
 router.get('/', function(req, res, next) {
@@ -22,17 +22,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:listId', getList, function(req, res, next) {
-  // res.send(req.list);
-  List
-    .find(req.list)
-    .populate('user')
-    .exec(function(err, list) {
-      if (err) {
-        return next(err);
-      }
-      res.send(list);
-      // res.send(list.user.username);
-    });
+  res.send(req.list);
 });
 
 

@@ -21,14 +21,7 @@ router.get('/', function(req, res, next) {
 
 /* GET user id */
 router.get('/:id', getUser, function(req, res, next) {
-  User
-    .find(req.user)
-    .exec(function(err, user) {
-      if (err) {
-        return next(err);
-      }
-      res.send(user);
-    });
+    res.send(req.user);
 });
 
 /* POST new user */
