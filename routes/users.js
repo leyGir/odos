@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-/* GET user id */
+/* GET one specific user */
 router.get('/:id', getUser, function(req, res, next) {
     res.send(req.user);
 });
