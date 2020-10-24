@@ -15,22 +15,22 @@ router.get('/', function(req, res, next) {
       if (err) {
         return next(err);
       }
-    res.send(users);
-  });
+      res.send(users);
+    });
 });
 
 /* GET one specific user */
 router.get('/:id', getUser, function(req, res, next) {
-    res.send(req.user);
+  res.send(req.user);
 });
 
 /* POST new user */
 router.post('/', function(req, res, next) {
   // Get the password
-  const password= req.body.password;
+  const password = req.body.password;
   const costFactor = config.bcryptCostFactor;
   // Hash the password
-  bcrypt.hash(password, costFactor, function(err, passwordHash){
+  bcrypt.hash(password, costFactor, function(err, passwordHash) {
     if (err) {
       return next(err);
     }
@@ -50,8 +50,12 @@ router.post('/', function(req, res, next) {
 });
 
 // PATCH the username of a user
-router.patch('/:id', getUser, function(req, res, next) {
-  // Update all properties (regardless of whether they are in the request body or not)
+router.patch('/:id', getUser, authenticate, function(req, res, next) {
+  // Check the authorization of the user. Is he authorized to change this thing ?
+  if (req.currentUserId != req.user._id) {
+    return res.status(403).send("You can't change someone else's data.")
+  }
+
   if (req.body.username !== undefined) {
     req.user.username = req.body.username;
   }
@@ -112,30 +116,30 @@ function getUser(req, res, next) {
 // A REPRENDRE PLUS TARD, POUR LES AUTORISATIONS
 // Route protections, not accessible until someone is authenticated
 // It uses the token
-// function authenticate(req, res, next) {
-//   // Ensure the header is present.
-//   const authorization = req.get('Authorization');
-//   if (!authorization) {
-//     return res.status(401).send('Authorization header is missing');
-//   }
-//
-//   // Check that the header has the correct format.
-//   const match = authorization.match(/^Bearer (.+)$/);
-//   if (!match) {
-//     return res.status(401).send('Authorization header is not a bearer token');
-//   }
-//
-//   // Extract and verify the JWT.
-//   const token = match[1];
-//   jwt.verify(token, config.secretKey, function(err, payload) {
-//     if (err) {
-//       return res.status(401).send('Your token is invalid or has expired');
-//     } else {
-//       req.currentUserId = payload.sub;
-//       next(); // Pass the ID of the authenticated user to the next middleware.
-//     }
-//   });
-// }
+function authenticate(req, res, next) {
+  // Ensure the header is present.
+  const authorization = req.get('Authorization');
+  if (!authorization) {
+    return res.status(401).send('Authorization header is missing');
+  }
+
+  // Check that the header has the correct format.
+  const match = authorization.match(/^Bearer (.+)$/);
+  if (!match) {
+    return res.status(401).send('Authorization header is not a bearer token');
+  }
+
+  // Extract and verify the JWT.
+  const token = match[1];
+  jwt.verify(token, config.secretKey, function(err, payload) {
+    if (err) {
+      return res.status(401).send('Your token is invalid or has expired');
+    } else {
+      req.currentUserId = payload.sub;
+      next(); // Pass the ID of the authenticated user to the next middleware.
+    }
+  });
+}
 
 
 module.exports = router;
