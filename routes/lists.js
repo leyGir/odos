@@ -6,10 +6,10 @@ const List = require('../models/list');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const debug = require('debug')('demo:lists');
+const utils = require('./utils');
 
 // GET list of all lists
-router.get('/', function(req, res, next) {
-  // res.send('lists')
+router.get('/', utils.authenticate, function(req, res, next) {
   List
     .find()
     .sort('name')
@@ -22,13 +22,13 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET one specific list */
-router.get('/:listId', getList, function(req, res, next) {
+router.get('/:listId', utils.authenticate, getList, function(req, res, next) {
   res.send(req.list);
 });
 
 
 // POST new list
-router.post('/', getList, function(req, res, next) {
+router.post('/', utils.authenticate, getList, function(req, res, next) {
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
   // res.send(req.params.userId);
@@ -48,7 +48,7 @@ router.post('/', getList, function(req, res, next) {
 
 
 // PUT the name of a list
-router.patch('/:listId', getList, function(req, res, next) {
+router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
   // res.send(req.list.name);
   // Update all properties (regardless of whether they are in the request body or not)
   if (req.body.name !== undefined) {
@@ -77,7 +77,7 @@ router.patch('/:listId', getList, function(req, res, next) {
 
 
 //DELETE one list
-router.delete('/:listId', getList, function(req, res, next) {
+router.delete('/:listId', utils.authenticate, getList, function(req, res, next) {
   req.list.remove(function(err) {
     if (err) {
       return next(err);
