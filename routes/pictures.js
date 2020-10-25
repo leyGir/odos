@@ -1,9 +1,15 @@
+// ------ REQUIRE ------
 const express = require('express');
 const router = express.Router();
-const Picture = require('../models/picture');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const debug = require('debug')('demo:people');
+
+// ------ WEBSOCKET ------
+
+
+// ------ MODELS ------
+const Picture = require('../models/picture');
 
 /* GET pictures listing. */
 router.get('/', function (req, res, next) {
@@ -15,6 +21,8 @@ router.get('/', function (req, res, next) {
   });
 });
 
+
+/* GET one specific picture */
 router.get('/:pictureId', getPicture, function (req, res, next) {
   Picture.find(req.picture).exec(function (err, picture) {
     if (err) {
@@ -31,12 +39,14 @@ router.post('/', getPicture, function (req, res, next) {
   const user = req.params.userId;
   // Create a new picture from the JSON in the request body
   const newPicture = new Picture(req.body);
+  newPicture.set('picture', picture);
   // Save that document
   newPicture.save(function (err, savedPicture) {
     if (err) {
       return next(err);
     }
     // Send the saved document in the response
+    debug(`New picture "${savedPicture.description}"`);
     res.status(201).send(savedPicture);
   });
 });
@@ -61,7 +71,7 @@ router.patch('/:pictureId', getPicture, function (req, res, next) {
       return next(err);
     }
 
-    debug(`Updated picture "${savedPicture.name}"`);
+    debug(`Updated picture "${savedPicture.description}"`);
     res.send(savedPicture);
   });
 });
