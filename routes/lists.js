@@ -9,9 +9,15 @@ const debug = require('debug')('demo:lists');
 const utils = require('./utils');
 
 // GET list of all lists
-router.get('/', utils.authenticate, function(req, res, next) {
+router.get('/', utils.authenticate, getList, function(req, res, next) {
+  if (req.currentUserId != req.params.userId) {
+    return res.status(403).send("You can't see these lists")
+  }
   List
-    .find()
+    .find({
+      user: req.currentUserId
+    })
+    .populate('user')
     .sort('name')
     .exec(function(err, lists) {
       if (err) {
@@ -23,12 +29,18 @@ router.get('/', utils.authenticate, function(req, res, next) {
 
 /* GET one specific list */
 router.get('/:listId', utils.authenticate, getList, function(req, res, next) {
+  if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
+    return res.status(403).send("You can't see this list")
+  }
   res.send(req.list);
 });
 
 
 // POST new list
 router.post('/', utils.authenticate, getList, function(req, res, next) {
+  if (req.currentUserId != req.params.userId) {
+    return res.status(403).send("You can't create your list there")
+  }
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
   // res.send(req.params.userId);
@@ -50,6 +62,9 @@ router.post('/', utils.authenticate, getList, function(req, res, next) {
 // PUT the name of a list
 router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
   // res.send(req.list.name);
+  if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
+    return res.status(403).send("You can't edit this list")
+  }
   // Update all properties (regardless of whether they are in the request body or not)
   if (req.body.name !== undefined) {
     req.list.name = req.body.name;
@@ -78,13 +93,16 @@ router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
 
 //DELETE one list
 router.delete('/:listId', utils.authenticate, getList, function(req, res, next) {
+  if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
+    return res.status(403).send("You can't delete this list")
+  }
   req.list.remove(function(err) {
     if (err) {
       return next(err);
     }
 
     debug(`Deleted list "${req.list.name}"`);
-    res.send(`"${req.list.name}" deleted`).sendStatus(204);
+    res.sendStatus(204);
   });
 });
 
