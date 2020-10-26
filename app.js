@@ -15,7 +15,8 @@ const mongoose = require('mongoose');
 mongoose.Promise = Promise;
 mongoose.connect(config.databaseUrl, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 });
 
 const app = express();
