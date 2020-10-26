@@ -24,12 +24,7 @@ router.get('/', function (req, res, next) {
 
 /* GET one specific picture */
 router.get('/:pictureId', getPicture, function (req, res, next) {
-  Picture.find(req.picture).exec(function (err, picture) {
-    if (err) {
-      return next(err);
-    }
-    res.send(picture);
-  });
+  res.send(req.picture);
 });
 
 
