@@ -11,7 +11,7 @@ const debug = require('debug')('demo:people');
 // ------ MODELS ------
 const Picture = require('../models/picture');
 
-/* GET pictures listing. */
+/* GET pictures pictureing. */
 router.get('/', function (req, res, next) {
   Picture.find().sort('picture').exec(function (err, pictures) {
     if (err) {
@@ -93,7 +93,7 @@ function getPicture(req, res, next) {
   //   return pictureNotFound(res, pictureId);
   // }
   // get the picture by id
-  List.findById(req.params.pictureId, function (err, list) {
+  Picture.findById(req.params.pictureId, function(err, picture) {
     if (err) {
       return next(err);
     }
