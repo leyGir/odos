@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const debug = require('debug')('demo:people');
 const utils = require('./utils');
 
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   User
@@ -19,7 +21,17 @@ router.get('/', function(req, res, next) {
     });
 });
 
-/* GET one specific user */
+/**
+ * @api {get} /users/:id Request a user's information
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {Number} id Unique identifier of the user
+ *
+ * @apiSuccess {String} username Username of the user
+ * @apiSuccess {String} email  Email of the user
+ * @apiSuccess {String} password  Password of the user
+ */
 router.get('/:id', getUser, function(req, res, next) {
   res.send(req.user);
 });
