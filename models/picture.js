@@ -36,7 +36,7 @@ const pictureSchema = new Schema({
   picture: String,
   creation_date: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
     required: true
   },
   last_mod_date:{
