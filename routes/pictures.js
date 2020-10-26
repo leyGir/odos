@@ -6,7 +6,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const debug = require('debug')('demo:people');
 
 // ------ WEBSOCKET ------
-
+const webSocket = require('../websocket/dispatcher');
 
 // ------ MODELS ------
 const Picture = require('../models/picture');
@@ -93,7 +93,7 @@ function getPicture(req, res, next) {
   //   return pictureNotFound(res, pictureId);
   // }
   // get the picture by id
-  List.findById(req.params.pictureId, function (err, list) {
+Picture.findById(req.params.pictureId, function (err, picture) {
     if (err) {
       return next(err);
     }
