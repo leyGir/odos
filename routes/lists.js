@@ -9,7 +9,7 @@ const debug = require('debug')('demo:lists');
 const utils = require('./utils');
 
 // GET list of all lists
-router.get('/', utils.authenticate, getList, function(req, res, next) {
+router.get('/', utils.authenticate, function(req, res, next) {
   // Authorization
   if (req.currentUserId != req.params.userId) {
     return res.status(403).send("You can't see these lists")
@@ -19,8 +19,8 @@ router.get('/', utils.authenticate, getList, function(req, res, next) {
     .find({
       user: req.currentUserId
     })
-    .populate('user')
-    .populate('picture')
+    // .populate('user')
+    // .populate('picture')
     .sort('name')
     .exec(function(err, lists) {
       if (err) {
@@ -38,16 +38,16 @@ router.get('/:listId', utils.authenticate, getList, function(req, res, next) {
   }
   // Find the list
   res.send(req.list);
-  List
-    .find(req.list)
-    .populate('user')
-    .populate('picture')
-    .exec(function(err, list) {
-      if (err) {
-        return next(err);
-      }
-      res.send(list);
-    });
+  // List
+  //   .find(req.list)
+  //   .populate('user')
+  //   .populate('picture')
+  //   .exec(function(err, list) {
+  //     if (err) {
+  //       return next(err);
+  //     }
+  //     res.send(list);
+  //   });
 });
 
 
@@ -106,16 +106,14 @@ router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
   });
 });
 
-// PATCH to delete a picture from a list
-router.patch('/:listId/deletePicture', utils.authenticate, getList, function(req, res, next) {
+// DELETE a picture from a list
+router.delete('/:listId/picture/:pictureId', utils.authenticate, getList, function(req, res, next) {
   // Authorization
   if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
     return res.status(403).send("You can't edit this list")
   }
 
-  if (req.body.picture !== undefined) {
-    req.list.picture.splice(req.list.picture.indexOf(req.body.picture), 1);
-  }
+  req.list.picture.splice(req.list.picture.indexOf(req.params.pictureId), 1);
 
   req.list.modificationDate = new Date();
 
@@ -130,7 +128,7 @@ router.patch('/:listId/deletePicture', utils.authenticate, getList, function(req
 });
 
 
-//DELETE one list
+// DELETE one list
 router.delete('/:listId', utils.authenticate, getList, function(req, res, next) {
   // Authorization
   if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
