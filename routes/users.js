@@ -8,7 +8,15 @@ const utils = require('./utils');
 
 
 
-/* GET users listing. */
+/**
+ * @api {get} /users List users
+ * @apiName RetrieveUsers
+ * @apiGroup User
+ * @apiVersion 1.0.0
+ * @apiDescription Retrieves a paginated??? list of users ordered by usernames???? (in alphabetical order).
+ *
+ * @apiUse UserInResponseBody
+ */
 router.get('/', function(req, res, next) {
   User
     .find()
@@ -52,7 +60,7 @@ router.get('/:id', getUser, function(req, res, next) {
 
 
 /**
- * @api {post} / Create an user
+ * @api {post} /users Create an user
  * @apiName CreateUser
  * @apiGroup User
  * @apiVersion 1.0.0
@@ -108,7 +116,37 @@ router.post('/', function(req, res, next) {
   });
 });
 
-// PATCH the username of a user
+/**
+ * @api {patch} /users/:id Partially update an user
+ * @apiName UpdateUser
+ * @apiGroup User
+ * @apiVersion 1.0.0
+ * @apiDescription Updates the new data on the old user's data
+ *
+ * @apiUse UserIdInUrlPath
+ * @apiUse UserInRequestBody
+ * @apiUse UserInResponseBody
+ *
+ * @apiExample Example
+ *     PUT /api/movies/58b2926f5e1def0123e97bc0 HTTP/1.1
+ *     Content-Type: application/json
+ *
+ *     {
+ *       "username": "Poire",
+ *       "password": "Tre$M4uvais"
+ *     }
+ *
+ * @apiSuccessExample 200 OK
+ *     HTTP/1.1 200 OK
+ *     Content-Type: application/json
+ *
+ *     {
+ *       "_id": "58b2926f5e1def0123e97bc0",
+ *       "username": "Poire",
+ *       "email": "gateau@gmail.com",
+ *       "registrationDate":"2020-10-27T13:19:32.249Z"
+ *     }
+ */
 router.patch('/:id', getUser, utils.authenticate, function(req, res, next) {
   // Check the authorization of the user. Is he authorized to change this thing ?
   if (req.currentUserId != req.user._id) {
@@ -137,8 +175,21 @@ router.patch('/:id', getUser, utils.authenticate, function(req, res, next) {
   });
 });
 
-
-/* DELETE user */
+/**
+ * @api {delete} /:id Delete an user
+ * @apiName DeleteUser
+ * @apiGroup User
+ * @apiVersion 1.0.0
+ * @apiDescription Permanently deletes an user.
+ *
+ * @apiUse UserIdInUrlPath
+ *
+ * @apiExample Example
+ *     DELETE /users/5f981e64eeac3042b0e27b86 HTTP/1.1
+ *
+ * @apiSuccessExample 204 No Content
+ *     HTTP/1.1 204 No Content
+ */
 router.delete('/:id', getUser, function(req, res, next) {
   req.user.remove(function(err) {
     if (err) {
@@ -182,7 +233,7 @@ function getUser(req, res, next) {
 
 /**
  * @apiDefine UserInRequestBody
- * @apiParam (Request body) {String} id An Id who is referencing to the user (eg: `5f981e64eeac3042b0e27b86`)
+ * @apiParam (Request body) {String} id An Id which is referencing the user (eg: `5f981e64eeac3042b0e27b86`)
  * @apiParam (Request body) {String{/^[a-zA-Z0-9]+$/}} username The username of the user (must be unique and cannot be blank)
  * @apiParam (Request body) {String{/\S+@\S+\.\S+/}} email The email of the user (must match an email form, must be unique and cannot be blank)
  * @apiParam (Request body) {String} password The password of the user that is put in hash (cannot be blank)
@@ -190,7 +241,7 @@ function getUser(req, res, next) {
 
 /**
  * @apiDefine UserInResponseBody
- * @apiSuccess (Response body) {String} id An Id who is referencing to the user 
+ * @apiSuccess (Response body) {String} id An Id which is referencing the user 
  * @apiSuccess (Response body) {String{/^[a-zA-Z0-9]+$/}} username The username of the user 
  * @apiSuccess (Response body) {String{/\S+@\S+\.\S+/}} email The email of the user 
  * @apiSuccess (Response body) {String} registrationDate The date at which the user was created
