@@ -112,7 +112,7 @@ router.post('/', utils.authenticate, getList, function(req, res, next) {
 });
 
 
-// PUT the name of a list
+// PATCH the name or the visibility of a list and add a picture
 router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
   // Authorization
   if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
@@ -129,7 +129,6 @@ router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
 
   if (req.body.picture !== undefined) {
     req.list.picture.push(req.body.picture);
-    // req.list.picture = req.body.picture;
   }
 
   req.list.modificationDate = new Date();
@@ -140,6 +139,29 @@ router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
     }
 
     debug(`Updated list "${savedList.name}"`);
+    res.send(savedList);
+  });
+});
+
+// PATCH to delete a picture from a list
+router.patch('/:listId/deletePicture', utils.authenticate, getList, function(req, res, next) {
+  // Authorization
+  if (req.currentUserId != req.params.userId || req.currentUserId != req.list.user) {
+    return res.status(403).send("You can't edit this list")
+  }
+
+  if (req.body.picture !== undefined) {
+    req.list.picture.splice(req.list.picture.indexOf(req.body.picture), 1);
+  }
+
+  req.list.modificationDate = new Date();
+
+  req.list.save(function(err, savedList) {
+    if (err) {
+      return next(err);
+    }
+
+    debug(`Photo deleted from "${savedList.name}"`);
     res.send(savedList);
   });
 });
