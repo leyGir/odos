@@ -93,11 +93,7 @@ function getPicture(req, res, next) {
   //   return pictureNotFound(res, pictureId);
   // }
   // get the picture by id
-<<<<<<< HEAD
 Picture.findById(req.params.pictureId, function (err, picture) {
-=======
-  Picture.findById(req.params.pictureId, function(err, picture) {
->>>>>>> e3248feb0fcf3f9c198f7240e3ac2abee2a98ccd
     if (err) {
       return next(err);
     }
