@@ -32,7 +32,7 @@ const pictureSchema = new Schema({
         }
       }
     }
-  }, 
+  },
   picture: String,
   creation_date: {
     type: Date,

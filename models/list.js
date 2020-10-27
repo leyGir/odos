@@ -29,10 +29,10 @@ const listSchema = new Schema({
     // required: [true, 'A list must belong to an user'],
     // default: '5f840ec9baa3a856541d879c'
   },
-  picture: {
+  picture: [{
     type: Schema.Types.ObjectId,
     ref: 'Picture'
-  },
+  }],
   public: { type: Boolean, default: false }
 });
 
