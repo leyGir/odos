@@ -37,6 +37,7 @@ router.get('/:listId', utils.authenticate, getList, function(req, res, next) {
     return res.status(403).send("You can't see this list")
   }
   // Find the list
+  res.send(req.list);
   List
     .find(req.list)
     .populate('user')
@@ -90,7 +91,8 @@ router.patch('/:listId', utils.authenticate, getList, function(req, res, next) {
   }
 
   if (req.body.picture !== undefined) {
-    req.list.picture = req.body.picture;
+    req.list.picture.push(req.body.picture);
+    // req.list.picture = req.body.picture;
   }
 
   req.list.modificationDate = new Date();
