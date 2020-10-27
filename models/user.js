@@ -17,9 +17,10 @@ const userSchema = new Schema({
       required: [true, "can't be blank"],
       unique: true,
   },
-  //A faire! Hash password
   password:{
       type : String,
+      minlength: 3,
+      maxlength: 50,
       required: [true, "can't be blank"],
   },
   registrationDate:{

@@ -32,8 +32,13 @@ router.get('/', function(req, res, next) {
  * @apiSuccess {String} email  Email of the user
  * @apiSuccess {String} password  Password of the user
  */
-router.get('/:id', getUser, function(req, res, next) {
-  res.send(req.user);
+router.get('/:id', getUser, utils.authenticate, function(req, res, next) {
+  // Check the authorization of the user. Is he authorized to check this thing ?
+  if (req.currentUserId != req.user._id) {
+    return res.status(403).send("You can't check someone else's data.")
+  }
+    res.send(req.user);
+  
 });
 
 /* POST new user */
@@ -92,7 +97,11 @@ router.patch('/:id', getUser, utils.authenticate, function(req, res, next) {
 
 
 /* DELETE user */
-router.delete('/:id', getUser, function(req, res, next) {
+router.delete('/:id', getUser, utils.authenticate, function(req, res, next) {
+  // Check the authorization of the user. Is he authorized to delete this thing?
+  if (req.currentUserId != req.user._id) {
+    return res.status(403).send("You can't delete another user.")
+  }
   req.user.remove(function(err) {
     if (err) {
       return next(err);
