@@ -28,7 +28,7 @@ Application for sharing geotagged travel photos with favorites list function.
 ## Authorization
 
 - You cannot delete or edit someone else's photos
-- You cannot delete or edit a list of someone else
+- You cannot delete or edit someone else's list
 - You cannot add photos to someone else's list
 - You cannot see someone else's private list
 - You cannot modify someone else's data
@@ -58,6 +58,7 @@ Application for sharing geotagged travel photos with favorites list function.
 - see one list: http://odos.herokuapp.com/users/:userId/lists/:listId GET
 - modify one list: http://odos.herokuapp.com/users/:userId/lists/:listId PATCH
 - delete one list: http://odos.herokuapp.com/users/:userId/lists/:listId DELETE
+- delete a photo from a list: http://odos.herokuapp.com/users/:userId/lists/:listId/picture/:pictureId DELETE
 
 ## Real-time API
 

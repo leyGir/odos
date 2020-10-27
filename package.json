@@ -23,6 +23,6 @@
     "apidoc": "^0.25.0",
     "dotenv": "^8.2.0",
     "mongoose-unique-validator": "^2.0.3",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.6"
   }
 }
