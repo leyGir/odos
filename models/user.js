@@ -17,7 +17,6 @@ const userSchema = new Schema({
       required: [true, "can't be blank"],
       unique: true,
   },
-  //A faire! Hash password
   password:{
       type : String,
       required: [true, "can't be blank"],
@@ -37,6 +36,7 @@ userSchema.set('toJSON', {
 function transformJsonUser(doc, json, options) {
   // Remove the hashed password from the generated JSON.
   delete json.password;
+  delete json.__v;
   return json;
 }
 
