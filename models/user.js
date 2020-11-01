@@ -19,8 +19,6 @@ const userSchema = new Schema({
   },
   password:{
       type : String,
-      minlength: 3,
-      maxlength: 50,
       required: [true, "can't be blank"],
   },
   registrationDate:{
@@ -38,6 +36,7 @@ userSchema.set('toJSON', {
 function transformJsonUser(doc, json, options) {
   // Remove the hashed password from the generated JSON.
   delete json.password;
+  delete json.__v;
   return json;
 }
 
