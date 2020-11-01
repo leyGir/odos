@@ -8,6 +8,9 @@ const ObjectId = mongoose.Types.ObjectId;
 const debug = require('debug')('demo:lists');
 const utils = require('./utils');
 
+// ------ WEBSOCKET ------
+const webSocket = require('../websocket/dispatcher');
+
 // GET list of all lists
 router.get('/', utils.authenticate, authorization, function(req, res, next) {
   // Find the lists
@@ -22,6 +25,11 @@ router.get('/', utils.authenticate, authorization, function(req, res, next) {
       if (err) {
         return next(err);
       }
+      
+      // Websocket
+      const nbLists = lists.length;
+      webSocket.nbLists(nblists);
+
       res.send(lists);
     });
 });

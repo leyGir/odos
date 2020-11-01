@@ -45,7 +45,7 @@ exports.nbPictures = function(pictures){
 };
 
 // Counting the number of lists
-exports.nbListss = function(lists){
+exports.nbLists = function(lists){
     tabCreateUsers.forEach(ws => {
         ws.send('There are ' + lists + ' lists');
     })

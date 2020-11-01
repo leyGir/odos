@@ -10,6 +10,104 @@ const webSocket = require('../websocket/dispatcher');
 
 // ------ MODELS ------
 const Picture = require('../models/picture');
+const List = require('../models/list');
+
+
+// ------ RESOURCES ODOS ------
+/**
+ * Show all pictures
+ * Add a aggregation to count pictures for a liste // je ne sais pas s'il faut finalement le faire ?
+ * Example : http://localhost:3000/users/:userId/pictures
+ * Pagination
+ * Example : http://localhost:3000/users/:userId/pictures?pageSize=3
+ */
+
+router.get('/pictures', function (req, res, next) {
+  Picture.find().count(function (err, total) {
+    if (err) {
+      return next(err);
+    }
+
+    // Parse pagination parameters from URL query parameters
+    const { page, pageSize } = func.getPaginationParameters(req);
+
+    // Aggregation
+    Picture.aggregate([
+      {
+        $lookup: {
+          from: 'lists',
+          localField: '_id',
+          foreignField: 'pictureId',
+          as: 'listedPicture'
+        }
+      },
+      {
+        $unwind:
+        {
+          path: "$listedPicture",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $addFields: {
+          listedPicture: {
+            $cond: {
+              if: '$listedPicture',
+              then: 1,
+              else: 0
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          description: { $first: '$description' },
+          location: { $first: '$location' },
+          picture: { $first: '$picture' },
+          creation_date: { $first: '$creation_date' },
+          last_mod_date: { $first: '$last_mod_date' },
+          listedPicture: { $sum: '$listedPicture' }
+        }
+      },
+      {
+        $sort: {
+          description: 1
+        }
+      },
+      {
+        $skip: (page - 1) * pageSize
+      },
+      {
+        $limit: pageSize
+      }
+    ], (err, pictures) => {
+      if (err) {
+        return next(err);
+      }
+      console.log(pictures);
+
+      // Add the Link header to the response
+      func.addLinkHeader('/pictures', page, pageSize, total, res);
+
+      // Websocket
+      const nbPictures = pictures.length;
+      webSocket.nbPictures(nbPictures);
+
+      res.send(pictures.map(picture => {
+
+        // Transform the aggregated object into a Mongoose model.
+        const serialized = new Picture(picture).toJSON();
+
+        // Add the aggregated property.
+        serialized.listedPicture = picture.listedPicture;
+
+        return serialized;
+      }));
+    });
+  });
+});
+
 
 /* GET pictures pictureing. */
 router.get('/', function (req, res, next) {
@@ -28,13 +126,29 @@ router.get('/:pictureId', getPicture, function (req, res, next) {
 });
 
 
+// -- POST --
+/**
+ * Create a picture
+ * Example : http://localhost:3000/users/:uersId/pictures
+ * Example body for Postman :
+  {
+       "description": "First picture",
+       "location":
+       {
+            "type": "Point",
+            "coordinates": [ 48.862725, 2.287592 ]
+       },
+        "picture": "https://source.unsplash.com/random"
+  }
+ */
+
 /* POST new picture */
-router.post('/', getPicture, function (req, res, next) {
+router.post('/', utils.authenticate, getPicture, function (req, res, next) {
   // Retrieve the user ID from the URL.
   const user = req.params.userId;
   // Create a new picture from the JSON in the request body
   const newPicture = new Picture(req.body);
-  newPicture.set('picture', picture);
+  newPicture.set('user', user);
   // Save that document
   newPicture.save(function (err, savedPicture) {
     if (err) {
@@ -48,7 +162,7 @@ router.post('/', getPicture, function (req, res, next) {
 
 
 //   /* PATCH one picture */
-router.patch('/:pictureId', getPicture, function (req, res, next) {
+router.patch('/:pictureId', utils.authenticate, getPicture, function (req, res, next) {
   // res.send(req.picture.name);
   // Update all properties (regardless of whether they are in the request body or not)
   if (req.body.name !== undefined) {
@@ -74,7 +188,7 @@ router.patch('/:pictureId', getPicture, function (req, res, next) {
 
 
 ///* DELETE one picture */
-router.delete('/:pictureId', getPicture, function (req, res, next) {
+router.delete('/:pictureId', utils.authenticate, getPicture, function (req, res, next) {
   req.picture.remove(function (err) {
     if (err) {
       return next(err);
@@ -93,7 +207,7 @@ function getPicture(req, res, next) {
   //   return pictureNotFound(res, pictureId);
   // }
   // get the picture by id
-Picture.findById(req.params.pictureId, function (err, picture) {
+  Picture.findById(req.params.pictureId, function (err, picture) {
     if (err) {
       return next(err);
     }

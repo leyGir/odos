@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 const debug = require('debug')('demo:people');
 const utils = require('./utils');
 
-
+// ------ WEBSOCKET ------
+const webSocket = require('../websocket/dispatcher');
 
 /**
  * @api {get} /users List users
@@ -25,6 +26,11 @@ router.get('/', function(req, res, next) {
       if (err) {
         return next(err);
       }
+
+      // Websocket
+      const nbUsers = users.length;
+      webSocket.nbUsers(nbUsers);
+
       res.send(users);
     });
 });
